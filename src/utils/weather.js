@@ -1,26 +1,45 @@
-import { API_KEY } from '../constans/apiKey';
+import { useState } from 'react';
+import { getCurrentWeather, getForecastWeather } from './findWeather.js';
 
-export const findLocation = async (city) => {
-  const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${API_KEY}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  const lat = data[0].lat;
-  const lon = data[0].lon;
-  return { lat, lon };
-};
+export const useWeather = () => {
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [forecastWeather, setForecastWeather] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-export const getCurrentWeather = async (city) => {
-  const { lat, lon } = await findLocation(city);
-  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
-  const currentResponse = await fetch(weatherUrl);
-  const currentWeatherData = await currentResponse.json();
-  return currentWeatherData;
-};
+  const fetchWeather = async (city) => {
+    try {
+      setCurrentWeather(null);
+      setForecastWeather(null);
+      setIsLoading(true);
+      setError(null);
+      const currentWeatherData = await getCurrentWeather(city);
+      setCurrentWeather(currentWeatherData);
+      const forecastWeatherData = await getForecastWeather(city);
+      const filteredForecast = forecastWeatherData.list.filter((item) => {
+        const date = new Date(Date.parse(item.dt * 1000));
+        const currentDate = new Date();
+        return (
+          date.getDate() !== currentDate.getDate() &&
+          item.dt_txt.includes('12:00:00')
+        );
+      });
+      setForecastWeather(filteredForecast);
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      setError(error);
+      setCurrentWeather(null);
+      setForecastWeather(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-export const getForecastWeather = async (city) => {
-  const { lat, lon } = await findLocation(city);
-  const forecastUrl = `api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
-  const forecastResponse = await fetch(forecastUrl);
-  const forecastWeatherData = await forecastResponse.json();
-  return forecastWeatherData;
+  return {
+    currentWeather,
+    forecastWeather,
+    fetchWeather,
+    isLoading,
+    error,
+  };
 };

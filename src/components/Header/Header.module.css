@@ -33,6 +33,7 @@
   padding: 10px;
   border: none;
   font-size: 20px;
+  transition: 0.3s;
 }
 
 .header_btn {
@@ -44,6 +45,7 @@
   font-size: 20px;
   width: 100px;
   border: none;
+  transition: 0.3s;
 }
 
 .header_btn:hover {

@@ -1,18 +1,24 @@
 import { useState } from 'react';
 import styles from './Header.module.css';
 
-export const Header = ({ setSearchCity }) => {
+export const Header = ({ fetchWeather }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
+  const handleForm = (event) => {
+    event.preventDefault();
+    setInputValue('');
+    fetchWeather(inputValue);
+  };
+
   return (
     <>
       <header className={styles.header}>
         <h1 className={styles['header_title']}>Weather</h1>
-        <form className={styles['header_form']}>
+        <form className={styles['header_form']} onSubmit={handleForm}>
           <input
             onChange={handleInputChange}
             value={inputValue}
@@ -20,15 +26,7 @@ export const Header = ({ setSearchCity }) => {
             className={styles['header_input']}
             placeholder="Search..."
           />
-          <button
-            type="submit"
-            className={styles['header_btn']}
-            onClick={(e) => {
-              e.preventDefault();
-              setSearchCity(inputValue);
-              setInputValue('');
-            }}
-          >
+          <button type="submit" className={styles['header_btn']}>
             Search
           </button>
         </form>

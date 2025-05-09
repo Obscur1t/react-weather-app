@@ -1,7 +1,3 @@
-import styles from './CurrentWeatherCard.module.css';
-
-export function CurrentWeatherCard({ children }) {
-  return (
-    <p className={styles['current_weather_card_description']}>{children}</p>
-  );
+export function CurrentWeatherCard({ children, className }) {
+  return <p className={className}>{children}</p>;
 }
