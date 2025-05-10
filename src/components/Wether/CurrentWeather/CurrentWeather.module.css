@@ -87,3 +87,42 @@
   align-items: center;
   gap: 10px;
 }
+
+@media (max-width: 767px) {
+  .current_weather_container {
+    width: 90%;
+    height: 100%;
+  }
+
+  .current_weather::before {
+    width: 0;
+    height: 0;
+  }
+
+  .current_weather {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+  }
+
+  .current_weather_base_info,
+  .current_weather_other_info {
+    width: 100%;
+    height: auto;
+  }
+  .current_weather_other_info {
+    padding: 10px;
+  }
+
+  .current_weather_temp_value {
+    font-size: 45px;
+  }
+
+  .current_weather_temp_value_feels {
+    font-size: 25px;
+  }
+
+  .current_weather_card_description {
+    font-size: 25px;
+  }
+}
